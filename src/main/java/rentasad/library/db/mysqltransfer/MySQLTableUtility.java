@@ -5,7 +5,6 @@ import rentasad.library.basicTools.StringTool;
 import rentasad.library.basicTools.dateTool.DateTools;
 import rentasad.library.db.ProgressDisplay;
 import rentasad.library.db.dataObjects.*;
-import rentasad.library.tools.exceptions.WrongDataTypeException;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -35,7 +34,7 @@ public class MySQLTableUtility
 	private Map<String, String> configMap;
 	private final int BATCH_SIZE = 500;
 	private final ProgressDisplay progressDisplay;
-	@Setter private final boolean debug;
+	@Setter private  boolean debug;
 
 	public MySQLTableUtility(Map<String, String> configMap)
 	{
@@ -85,10 +84,9 @@ public class MySQLTableUtility
 	 * @param mySQLTableDescription The description of the MySQL table.
 	 * @return The number of rows transferred.
 	 * @throws SQLException           If an error occurs while executing SQL statements.
-	 * @throws WrongDataTypeException If an unknown or undefined data type is encountered.
 	 */
 	public int transferTableFromAdsToMySQL(
-			final Connection mySQLConnection, final Connection adsConnection, final IsqlTableDescriptionInterface mySQLTableDescription) throws SQLException, WrongDataTypeException
+			final Connection mySQLConnection, final Connection adsConnection, final IsqlTableDescriptionInterface mySQLTableDescription) throws SQLException
 	{
 		progressDisplay.startProgress();
 		String tableName = mySQLTableDescription.getName();
@@ -136,11 +134,10 @@ public class MySQLTableUtility
 	 * @param tableName               The name of the table into which data is to be inserted.
 	 * @return The number of rows processed.
 	 * @throws SQLException           If a database access error occurs or the SQL statement is incorrect.
-	 * @throws WrongDataTypeException If an unknown or undefined data type is encountered.
 	 */
 	private int insertValuesWithPreparedStatements(
 			ResultSet adsSelectResultSet, Connection adsConnection, Connection mySQLConnection, ISQLTableColumnsDescriptionInterface[] tableColumnDescriptions, TableSelectObject tableSelectObject,
-			String tableName) throws SQLException, WrongDataTypeException
+			String tableName) throws SQLException
 	{
 		int zeile = 1;
 		// im NICHT-DEBUG-Modus wird mit Prepared Statements gearbeitet.
@@ -189,7 +186,7 @@ public class MySQLTableUtility
 						break;
 
 					default:
-						throw new WrongDataTypeException("Unbekannter nicht definierter Datentyp: " + objektTypInt);
+						throw new IllegalArgumentException("Unbekannter nicht definierter Datentyp: " + objektTypInt);
 					}
 				}
 
@@ -218,11 +215,10 @@ public class MySQLTableUtility
 	 * @param tableSelectObject       A TableSelectObject, containing various details such as the column list string used in the insertion.
 	 * @param tableName               The name of the target MySQL table into which the data will be inserted.
 	 * @throws SQLException           If an error occurs while executing SQL statements.
-	 * @throws WrongDataTypeException If an unknown or undefined data type is encountered during the data insertion process.
 	 */
 	private int insertValuesWithoutPreparedStatements(
 			ResultSet adsSelectResultSet, Connection adsConnection, Connection mySQLConnection, ISQLTableColumnsDescriptionInterface[] tableColumnDescriptions, TableSelectObject tableSelectObject,
-			String tableName) throws SQLException, WrongDataTypeException
+			String tableName) throws SQLException
 	{
 		int rowNumbers = getNumberOfEntriesFromAdsTableName(adsConnection, tableName);
 		int zeile = 1;
@@ -274,7 +270,7 @@ public class MySQLTableUtility
 					break;
 
 				default:
-					throw new WrongDataTypeException("Unbekannter nicht definierter Datentyp: " + objektTypInt);
+					throw new IllegalArgumentException("Unbekannter nicht definierter Datentyp: " + objektTypInt);
 				}
 				if (colNumber > 1)
 				{
@@ -388,10 +384,9 @@ public class MySQLTableUtility
 	 * @param tableName  The name of the table.
 	 * @return An array of ISQLTableColumnsDescriptionInterface containing the column descriptions.
 	 * @throws SQLException           If an error occurs while executing SQL statements.
-	 * @throws WrongDataTypeException If an unknown or undefined data type is encountered.
 	 */
 	public static ISQLTableColumnsDescriptionInterface[] getMySQLTableColumnDescription(
-			Connection connection, String tableName) throws SQLException, WrongDataTypeException
+			Connection connection, String tableName) throws SQLException
 	{
 		ArrayList<ISQLTableColumnsDescriptionInterface> mySQLTableDescriptions = new ArrayList<ISQLTableColumnsDescriptionInterface>();
 		String showQuery = "show full fields from " + tableName;
@@ -458,7 +453,7 @@ public class MySQLTableUtility
 				}
 				else if (javaObjektTypInt == ISQLTableColumnsDescriptionInterface.OBJECT_DATA_TYPE_UNDEFINED)
 				{
-					throw new WrongDataTypeException(
+					throw new IllegalArgumentException(
 							"Undefinierter Datentyp in Feld \"Default\" der Tabellenspaltenbeschreibung, javaObjektTypInt:" + javaObjektTypInt + ", typInt:" + typInt + " in Feld" + columnDescription.getField());
 				}
 
@@ -469,7 +464,7 @@ public class MySQLTableUtility
 			}
 			else
 			{
-				throw new WrongDataTypeException("Datentyp ist unbekannt oder noch nicht behandelt. Feld: " + columnDescription.getField());
+				throw new IllegalArgumentException("Datentyp ist unbekannt oder noch nicht behandelt. Feld: " + columnDescription.getField());
 			}
 
 			mySQLTableDescriptions.add(columnDescription);

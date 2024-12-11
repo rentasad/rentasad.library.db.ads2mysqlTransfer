@@ -12,7 +12,6 @@ import rentasad.library.db.dataObjects.ISQLTableColumnsDescriptionInterface;
 import rentasad.library.db.dataObjects.IsqlTableDescriptionInterface;
 import rentasad.library.db.dataObjects.MySQLTableColumnDescription;
 import rentasad.library.db.dataObjects.MySQLTableDescription;
-import rentasad.library.tools.exceptions.WrongDataTypeException;
 
 /**
  * 
@@ -74,12 +73,11 @@ public class MySQLTransfer2
      * @param adsConnection
      * @param mySQLTableDescription
      * @return Anzahl importierter Zeilen
-     * @throws WrongDataTypeException
      * @throws SQLException
      * @throws Exception
      */
     public int transferTableFromAdsToMySQL(final Connection mySQLConnection, final Connection adsConnection, final IsqlTableDescriptionInterface mySQLTableDescription, String adsTabellenPfad, boolean deleteBeforeInsert)
-                throws SQLException, WrongDataTypeException
+                throws SQLException
     {
 
         String tableName = mySQLTableDescription.getName();
@@ -115,10 +113,9 @@ public class MySQLTransfer2
      * @return
      * @throws SQLException
      *             Creation: 07.06.2016 by mst
-     * @throws WrongDataTypeException
      */
     private int insertDatasFromSelectQueryObject(Connection conSource, Connection conTarget, SelectQueryObject selectQueryObject, final IsqlTableDescriptionInterface mySQLTableDescription)
-                throws SQLException, WrongDataTypeException
+                throws SQLException
     {
         String tableName = "`" + mySQLTableDescription.getName() + "`";
 
@@ -179,7 +176,7 @@ public class MySQLTransfer2
                         break;
 
                     default:
-                        throw new WrongDataTypeException("Unbekannter nicht definierter Datentyp: " + objektTypInt);
+                        throw new IllegalArgumentException("Unbekannter nicht definierter Datentyp: " + objektTypInt);
                 }
             }
 
@@ -213,11 +210,12 @@ public class MySQLTransfer2
         private final ISQLTableColumnsDescriptionInterface[] tableColumnDescriptions;
 
         /**
-         * @param selectQuery
-         * @param selectQueryMySql
-         * @param mySQLColumnList
-         * @param columnPlaceHolder
-         * @param tableColumnDescriptions
+         * Constructs a SelectQueryObject which contains the necessary information for an automated INSERT in a SELECT statement.
+         *
+         * @param selectQuery The SQL SELECT query string.
+         * @param mySQLColumnList The list of MySQL columns to be selected.
+         * @param columnPlaceHolder The placeholder for columns in the query.
+         * @param tableColumnDescriptions An array of table column description interfaces.
          */
         public SelectQueryObject(
                                  String selectQuery,
@@ -276,11 +274,10 @@ public class MySQLTransfer2
      * @param fromTablePath
      * @return
      * @throws SQLException
-     * @throws WrongDataTypeException
      *             Creation: 08.06.2016 by mst
      */
     private SelectQueryObject getSelectQueryFromMySQlDescription(final Connection conSource, final Connection conTarget, final IsqlTableDescriptionInterface mySQLTableDescription, final String fromTablePath)
-                throws SQLException, WrongDataTypeException
+                throws SQLException
     {
         String tableName;
         if (conTarget.getMetaData().getDatabaseProductName().equalsIgnoreCase("Advantage Database Server"))
@@ -337,10 +334,9 @@ public class MySQLTransfer2
      * @param mySQLTableDescription
      * @return
      * @throws SQLException
-     * @throws WrongDataTypeException
      *             Creation: 08.06.2016 by mst
      */
-    public int transferMySqlTableToMySqlTable(final Connection conSource, final Connection conTarget, final IsqlTableDescriptionInterface mySQLTableDescription) throws SQLException, WrongDataTypeException
+    public int transferMySqlTableToMySqlTable(final Connection conSource, final Connection conTarget, final IsqlTableDescriptionInterface mySQLTableDescription) throws SQLException
     {
         String tableName = "`" + mySQLTableDescription.getName() + "`";
         SelectQueryObject selectQueryObject = getSelectQueryFromMySQlDescription(conSource, conTarget, mySQLTableDescription, "");
@@ -384,15 +380,14 @@ public class MySQLTransfer2
     }
 
     /**
+     * Retrieves the description of columns for a specified MySQL table.
      *
-     * @param adsConnection
-     * @param tableName
-     * @return
-     * @throws SQLException
-     * @throws WrongDataTypeException
-     * @throws Exception
+     * @param connection the database connection to use for querying the table description
+     * @param tableName the name of the table for which to retrieve the column descriptions
+     * @return an array of ISQLTableColumnsDescriptionInterface objects representing the column descriptions of the specified table
+     * @throws SQLException if a database access error occurs
      */
-    public static ISQLTableColumnsDescriptionInterface[] getMySQLTableColumnDescription(Connection connection, String tableName) throws SQLException, WrongDataTypeException
+    public static ISQLTableColumnsDescriptionInterface[] getMySQLTableColumnDescription(Connection connection, String tableName) throws SQLException
     {
         ArrayList<ISQLTableColumnsDescriptionInterface> mySQLTableDescriptions = new ArrayList<ISQLTableColumnsDescriptionInterface>();
         String showQuery = "show full fields from " + tableName;
@@ -458,13 +453,13 @@ public class MySQLTransfer2
 
                 if (javaObjektTypInt == ISQLTableColumnsDescriptionInterface.OBJECT_DATA_TYPE_UNDEFINED)
                 {
-                    throw new WrongDataTypeException(
+                    throw new IllegalArgumentException(
                                 "Undefinierter Datentyp in Feld \"Default\" der Tabellenspaltenbeschreibung, javaObjektTypInt:" + javaObjektTypInt + ", typInt:" + typInt + " in Feld" + columnDescription.getField());
                 }
 
             } else
             {
-                throw new WrongDataTypeException("Datentyp ist unbekannt oder noch nicht behandelt. Feld: " + columnDescription.getField());
+                throw new IllegalArgumentException("Datentyp ist unbekannt oder noch nicht behandelt. Feld: " + columnDescription.getField());
             }
 
             mySQLTableDescriptions.add(columnDescription);
@@ -472,15 +467,14 @@ public class MySQLTransfer2
         return mySQLTableDescriptions.toArray(new MySQLTableColumnDescription[0]);
     }
 
+
     /**
-     * Holt aus der angegebenen SQL-Verbindung (MySQL) alle verfuegbaren Tabellen
-     * der angebenenen Datenbank und gibt sie als TableDescription-Objekt
-     * zurueck.
+     * Retrieves an array of table descriptions for all tables in the specified MySQL database.
      *
-     * @param adsConnection
-     * @param dbName
-     * @return
-     * @throws SQLException
+     * @param connection The database connection to use for retrieving the table descriptions.
+     * @param dbName The name of the database from which to retrieve the table descriptions.
+     * @return An array of IsqlTableDescriptionInterface objects representing the descriptions of the tables in the specified database.
+     * @throws SQLException if a database access error occurs or the dbName is not found.
      */
     public static IsqlTableDescriptionInterface[] getMySQLTableDescriptions(Connection connection, String dbName) throws SQLException
     {
@@ -517,15 +511,13 @@ public class MySQLTransfer2
     }
 
     /**
-     * Holt aus der angegebenen SQL-Verbindung (MySQL) eine bestimmte Tabelle
-     * der angebenenen Datenbank und gibt sie als TableDescription-Objekt
-     * zurueck.
+     * Retrieves the description of a specified table in a MySQL database.
      *
-     * @param adsConnection
-     * @param dbName
-     * @return null wenn Tabelle nicht gefunden und sonst ein
-     *         MySQLTableDescription-Objekt
-     * @throws SQLException
+     * @param connection the database connection to use for retrieving the table description
+     * @param dbName the name of the database where the table is located
+     * @param tableName the name of the table for which to retrieve the description
+     * @return an array of IsqlTableDescriptionInterface objects representing the descriptions of the specified table
+     * @throws SQLException if a database access error occurs
      */
     public static IsqlTableDescriptionInterface[] getMySQLTableDescription(Connection connection, String dbName, String tableName) throws SQLException
     {
@@ -535,15 +527,12 @@ public class MySQLTransfer2
     }
 
     /**
-     * Holt aus der angegebenen SQL-Verbindung (MySQL) eine bestimmte Tabelle
-     * der aktuell verbundenen Datenbank und gibt sie als
-     * TableDescription-Objekt
-     * zurueck.
+     * Retrieves the description of a specified table in a MySQL database.
      *
-     * @param adsConnection
-     * @param tableName
-     * @return
-     * @throws SQLException
+     * @param connection the database connection to use for querying the table description
+     * @param tableName the name of the table for which to retrieve the description
+     * @return an array of IsqlTableDescriptionInterface objects representing the descriptions of the specified table
+     * @throws SQLException if a database access error occurs
      */
     public static IsqlTableDescriptionInterface[] getMySQLTableDescriptionArray(Connection connection, String tableName) throws SQLException
     {
@@ -581,15 +570,12 @@ public class MySQLTransfer2
     }
 
     /**
-     * Holt aus der angegebenen SQL-Verbindung (MySQL) eine bestimmte Tabelle
-     * der aktuell verbundenen Datenbank und gibt sie als
-     * TableDescription-Objekt
-     * zurueck.
+     * Retrieves the description of a specified table in a MySQL database.
      *
-     * @param adsConnection
-     * @param tableName
-     * @return
-     * @throws SQLException
+     * @param connection the database connection to use for querying the table description
+     * @param tableName the name of the table for which to retrieve the description
+     * @return an IsqlTableDescriptionInterface object representing the description of the specified table
+     * @throws SQLException if a database access error occurs
      */
     public static IsqlTableDescriptionInterface getMySQLTableDescription(Connection connection, String tableName) throws SQLException
     {
