@@ -10,7 +10,7 @@ public class ProgressDisplay
 	private int progressBarWidth = 50;
 	private String message = "";
 
-	// Für die Zeitschätzung
+	// FÃ¼r die ZeitschÃ¤tzung
 	private long startTime = 0;
 
 	// Konstruktor mit Standardbreite
@@ -33,7 +33,7 @@ public class ProgressDisplay
 		this.progressBarWidth = progressBarWidth;
 	}
 
-	// Setze eine Nachricht, die über dem Fortschritt angezeigt wird
+	// Setze eine Nachricht, die Ã¼ber dem Fortschritt angezeigt wird
 	public void setMessage(String message)
 	{
 		this.message = message;
@@ -41,20 +41,20 @@ public class ProgressDisplay
 		displayMessage();
 	}
 
-	// Zeige die Nachricht eine Zeile über dem Fortschritt an
+	// Zeige die Nachricht eine Zeile Ã¼ber dem Fortschritt an
 	private void displayMessage()
 	{
 		System.out.print("\033[1A"); // Bewege den Cursor eine Zeile nach oben
-		System.out.print("\r" + message + "\n"); // Überschreibe die Zeile mit der Nachricht
+		System.out.print("\r" + message + "\n"); // Ãœberschreibe die Zeile mit der Nachricht
 	}
 
-	// Zeitschätzung starten
+	// ZeitschÃ¤tzung starten
 	public void startProgress()
 	{
 		this.startTime = System.currentTimeMillis();
 	}
 
-	// Variante 1: Direkte prozentuale Fortschrittsanzeige mit Zeitschätzung
+	// Variante 1: Direkte prozentuale Fortschrittsanzeige mit ZeitschÃ¤tzung
 	public void displayPercentageProgress(BigDecimal percentage, BigDecimal total)
 	{
 		long estimatedTimeRemaining = estimateTimeRemaining(percentage, total);
@@ -72,7 +72,7 @@ public class ProgressDisplay
 		System.out.print("\rFortschritt: " + percentage.setScale(2, RoundingMode.HALF_UP) + "%, Restzeit: " + formatTime(estimatedTimeRemaining));
 	}
 
-	// Variante 3: Gib den Fortschritt in absoluten Werten an (z.B. 40 von 400) und zeige zusätzlich Prozent und Zeitschätzung
+	// Variante 3: Gib den Fortschritt in absoluten Werten an (z.B. 40 von 400) und zeige zusÃ¤tzlich Prozent und ZeitschÃ¤tzung
 	public void displayAbsoluteProgress(int currentInt, int totalInt)
 	{
 		BigDecimal current = BigDecimal.valueOf(currentInt);
@@ -84,13 +84,13 @@ public class ProgressDisplay
 		System.out.print("\rFortschritt: " + current + " von " + total + " (" + percentage.setScale(2, RoundingMode.HALF_UP) + "%), Restzeit: " + formatTime(estimatedTimeRemaining));
 	}
 
-	// Variante 4: Zeichne eine Progressbar (mit optionaler Breite) mit Zeitschätzung
+	// Variante 4: Zeichne eine Progressbar (mit optionaler Breite) mit ZeitschÃ¤tzung
 	public void displayProgressBar(BigDecimal percentage, BigDecimal total)
 	{
 		displayProgressBar(percentage, total, this.progressBarWidth);
 	}
 
-	// Variante 4 (mit optionaler Breite): Zeichne eine Progressbar mit angegebener Breite und Zeitschätzung
+	// Variante 4 (mit optionaler Breite): Zeichne eine Progressbar mit angegebener Breite und ZeitschÃ¤tzung
 	public void displayProgressBar(BigDecimal percentage, BigDecimal total, int barWidth)
 	{
 		int completedBars = percentage.divide(BigDecimal.valueOf(100), 5, RoundingMode.HALF_UP)
@@ -98,12 +98,12 @@ public class ProgressDisplay
 									  .intValue();
 		StringBuilder progressBar = new StringBuilder("[");
 
-		// Fülle die Fortschrittsanzeige
+		// FÃ¼lle die Fortschrittsanzeige
 		for (int i = 0; i < completedBars; i++)
 		{
 			progressBar.append("=");
 		}
-		// Fülle den Rest der Progressbar
+		// FÃ¼lle den Rest der Progressbar
 		for (int i = completedBars; i < barWidth; i++)
 		{
 			progressBar.append(" ");
@@ -118,7 +118,7 @@ public class ProgressDisplay
 		System.out.print("\r" + progressBar + " Restzeit: " + formatTime(estimatedTimeRemaining));
 	}
 
-	// Variante 4 (mit absoluten Werten): Berechne Prozentsatz anhand von current/total und zeichne die Progressbar mit Zeitschätzung
+	// Variante 4 (mit absoluten Werten): Berechne Prozentsatz anhand von current/total und zeichne die Progressbar mit ZeitschÃ¤tzung
 	public void displayProgressBarWithAbsolute(BigDecimal current, BigDecimal total)
 	{
 		BigDecimal percentage = current.divide(total, 5, RoundingMode.HALF_UP)
@@ -126,7 +126,7 @@ public class ProgressDisplay
 		displayProgressBar(percentage, total); // Zeige die Progressbar basierend auf dem berechneten Prozentsatz
 	}
 
-	// Methode zur Schätzung der verbleibenden Zeit basierend auf den Schritten
+	// Methode zur SchÃ¤tzung der verbleibenden Zeit basierend auf den Schritten
 	private long estimateTimeRemaining(BigDecimal current, BigDecimal total)
 	{
 		if (current.compareTo(BigDecimal.ZERO) <= 0 || current.compareTo(total) >= 0)
@@ -155,12 +155,12 @@ public class ProgressDisplay
 		return remainingTime.longValue();
 	}
 
-	// Formatierung der Zeit in Stunden, Minuten und Sekunden für bessere Lesbarkeit
+	// Formatierung der Zeit in Stunden, Minuten und Sekunden fÃ¼r bessere Lesbarkeit
 	private String formatTime(long millis)
 	{
 		if (millis < 0)
 		{
-			return "unbekannt"; // Für den Fall, dass der Fortschritt 0 ist oder Fehler
+			return "unbekannt"; // FÃ¼r den Fall, dass der Fortschritt 0 ist oder Fehler
 		}
 		long seconds = millis / 1000;
 		long minutes = seconds / 60;
@@ -188,16 +188,16 @@ public class ProgressDisplay
 		}
 	}
 
-	// Beispielaufruf für die Klasse
+	// Beispielaufruf fÃ¼r die Klasse
 	public static void main(String[] args) throws InterruptedException
 	{
 		ProgressDisplay progressDisplay = new ProgressDisplay();
 
-		// Progressbar mit Zeitschätzung starten
+		// Progressbar mit ZeitschÃ¤tzung starten
 		progressDisplay.setMessage("Customer 22122");
 		progressDisplay.startProgress(); // Start der Zeitmessung
 
-		// Beispiel für Variante 4: Progressbar mit Standardbreite und Zeitschätzung
+		// Beispiel fÃ¼r Variante 4: Progressbar mit Standardbreite und ZeitschÃ¤tzung
 		BigDecimal totalSteps = new BigDecimal(37206);
 		for (BigDecimal i = BigDecimal.ZERO; i.compareTo(totalSteps) <= 0; i = i.add(new BigDecimal(100)))
 		{
