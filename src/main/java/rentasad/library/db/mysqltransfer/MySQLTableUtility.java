@@ -1,6 +1,7 @@
 package rentasad.library.db.mysqltransfer;
 
 import lombok.Setter;
+import lombok.extern.java.Log;
 import rentasad.library.basicTools.StringTool;
 import rentasad.library.basicTools.dateTool.DateTools;
 import rentasad.library.db.ProgressDisplay;
@@ -27,6 +28,7 @@ import java.util.Map;
  * Fuer richtiges Encoding muss im MySQL-Connection-String folgende Variable
  * angegeben werden: ?characterEncoding=cp1250
  */
+@Log
 public class MySQLTableUtility
 {
 	private static final String COLUMN_QUOTE = "`";
@@ -90,6 +92,7 @@ public class MySQLTableUtility
 	{
 		progressDisplay.startProgress();
 		String tableName = mySQLTableDescription.getName();
+
 		ISQLTableColumnsDescriptionInterface[] tableColumnDescriptions = MySQLTableUtility.getMySQLTableColumnDescription(mySQLConnection, tableName);
 		if (debug)
 		{

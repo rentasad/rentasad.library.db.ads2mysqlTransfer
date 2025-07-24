@@ -40,17 +40,17 @@
 		<dependency>
 			<groupId>rentasad.library</groupId>
 			<artifactId>rentasad.library.basicTools.stringTools</artifactId>
-			<version>B2.6.1</version>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>rentasad.library</groupId>
 			<artifactId>rentasad.library.basicTools.dateTools</artifactId>
-			<version>B2.6.1</version>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>rentasad.library</groupId>
 			<artifactId>rentasad.library.db.ads</artifactId>
-			<version>D3.0.0</version>
+			<version>3.0.2</version>
 		</dependency>
 		<!-- UPDATE 20.09.2018 Update nach Fehler in ServerTimeZone -> Fallback 
 			zu alter Version https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
