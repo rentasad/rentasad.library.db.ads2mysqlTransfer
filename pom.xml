@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>rentasad.library</groupId>
 	<artifactId>rentasad.library.db.ads2mysqlTransfer</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 	<name>rentasad.library.db.ads2mysqlTransfer</name>
 	<url>https://github.com/rentasad/rentasad.library.db.ads2mysqlTransfer</url>
 	<properties>
@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>rentasad.library</groupId>
 			<artifactId>rentasad.library.db.ads</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 		</dependency>
 		<!-- UPDATE 20.09.2018 Update nach Fehler in ServerTimeZone -> Fallback 
 			zu alter Version https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
