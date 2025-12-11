@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>rentasad.library</groupId>
 	<artifactId>rentasad.library.db.ads2mysqlTransfer</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.2</version>
 	<name>rentasad.library.db.ads2mysqlTransfer</name>
 	<url>https://github.com/rentasad/rentasad.library.db.ads2mysqlTransfer</url>
 	<properties>
@@ -13,15 +13,15 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- DEPENDENCIES VERSIONS -->
-		<maven-clean-plugin>3.3.2</maven-clean-plugin>
-		<maven-resources-plugin>3.3.1</maven-resources-plugin>
-		<maven-compiler-plugin>3.12.1</maven-compiler-plugin>
-		<maven-surefire-plugin>3.2.5</maven-surefire-plugin>
-		<maven-jar-plugin>3.3.0</maven-jar-plugin>
-		<maven-install-plugin>3.1.1</maven-install-plugin>
-		<maven-deploy-plugin>3.1.1</maven-deploy-plugin>
-		<maven-site-plugin>4.0.0-M13</maven-site-plugin>
-		<mavenProjectInfoReportsPlugin>3.1.2</mavenProjectInfoReportsPlugin>
+		<maven-clean-plugin>3.5.0</maven-clean-plugin>
+		<maven-resources-plugin>3.4.0</maven-resources-plugin>
+		<maven-compiler-plugin>3.14.1</maven-compiler-plugin>
+		<maven-surefire-plugin>3.5.4</maven-surefire-plugin>
+		<maven-jar-plugin>3.4.2</maven-jar-plugin>
+		<maven-install-plugin>3.1.4</maven-install-plugin>
+		<maven-deploy-plugin>3.1.4</maven-deploy-plugin>
+		<maven-site-plugin>3.21.0</maven-site-plugin>
+		<maven-project-info-reports-plugin>3.9.0</maven-project-info-reports-plugin>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>rentasad.library</groupId>
 			<artifactId>rentasad.library.db.ads</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 		</dependency>
 		<!-- UPDATE 20.09.2018 Update nach Fehler in ServerTimeZone -> Fallback 
 			zu alter Version https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
